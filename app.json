@@ -1,11 +1,10 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Diviselar",
+    "slug": "Diviselar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
@@ -23,11 +22,17 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#181818"
+      },
+      "package": "com.devsora.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3bd37e9b-5ab3-46e2-a66b-359ec911b730"
+      }
     }
   }
 }

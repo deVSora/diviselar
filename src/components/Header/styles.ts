@@ -17,7 +17,14 @@ export const Title = styled.Text`
         color: ${theme.colors.fourth};
         font-size: ${theme.fontSize.xl};
         font-family: ${theme.fontFamily.Bold};
+        text-transform: capitalize;
     `};
+`
+
+export const InvisibleContainer = styled.Text`
+    background-color: transparent;
+    width: 32px;
+    height: 32px;
 `
 
 export const BackButton = styled.TouchableOpacity`

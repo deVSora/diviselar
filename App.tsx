@@ -8,8 +8,9 @@ import {
   useFonts
  } from '@expo-google-fonts/inter'
 import { ThemeProvider } from 'styled-components/native';
-import { Character } from './src/screens/Character';
+
 import { Loading } from './src/components/Loading';
+import { Route } from './src/routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -21,7 +22,8 @@ export default function App() {
   return ( 
       <ThemeProvider theme={theme}>
         <StatusBar backgroundColor={theme.colors.secondary} style='light' translucent/>
-        {fontsLoaded ? <Character/> : <Loading/>}
+        {fontsLoaded ? <Route/> : <Loading/>}
+
       </ThemeProvider>
   )
 };

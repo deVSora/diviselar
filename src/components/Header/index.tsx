@@ -4,24 +4,32 @@ import {
     EditIcon,
     Title,
     BackButton,
-    EditButton
+    EditButton,
+    InvisibleContainer
 } from './styles'
 
-import theme from '../../theme'
+import { useNavigation } from '@react-navigation/native'
 
 interface Props{
     backArrow ?: boolean
     title : String
     edit ?: boolean
-    editScreen ?: () => {} 
+    editScreen ?: () => void 
 }
 
 export function Header({backArrow = false, title, edit = false, editScreen}: Props){
+    const navigation = useNavigation()
+    
+    function handleBack(){
+        navigation.navigate('start')
+        navigation.navigate('home')
+    }
+
     return(
         <Container>
-            {backArrow && <BackButton onPress={()=>{}}><BackIcon/></BackButton>}
+            {backArrow && <BackButton onPress={handleBack}><BackIcon/></BackButton>}
             <Title>{title}</Title>
-            {edit && <EditButton onPress={editScreen}><EditIcon/></EditButton>}
+            {edit ? <EditButton onPress={editScreen}><EditIcon/></EditButton> : <InvisibleContainer/>}
         </Container>
     )
 }
