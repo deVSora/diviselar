@@ -26,6 +26,14 @@ export const CharImg = styled.Image`
     border-radius: 5px;
 `
 
+export const Line = styled.View`
+    width: 80px;
+    align-self: center;
+    border: 2px solid ${({theme}) => theme.colors.fourth};
+    margin-top: 10px; 
+    border-radius: 5px;
+`
+
 export const EndContainer = styled.View`
     background-color: transparent;
     height: 20px;

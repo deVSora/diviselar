@@ -17,12 +17,6 @@ export function PickerStyled({valueArrays, placeHolder, ...rest} : Props){
       valueArrays.unshift(placeHolder)
     }
 
-    function checkBlank(el:string){
-      if(el === ''){
-        return 'Nenhum'
-      }
-      return el
-    }
     return(
       <Container>
         <Picker
@@ -35,9 +29,12 @@ export function PickerStyled({valueArrays, placeHolder, ...rest} : Props){
           {...rest}
           >
           { 
-            valueArrays.map(el => { return (
-            <Picker.Item key={el} fontFamily={theme.fontFamily.Medium} label={checkBlank(el)} value={el}/>
-          )})
+            valueArrays.map(el => { 
+              if(el !== ''){
+                return (
+                  <Picker.Item key={el} fontFamily={theme.fontFamily.Medium} label={el} value={el}/>
+                )}
+              })
           }
         </Picker>
       </Container>

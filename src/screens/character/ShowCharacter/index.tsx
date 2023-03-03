@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useRoute } from '@react-navigation/native'
-import { useNavigation } from '@react-navigation/native'
-import { CharProps } from '../../../@types/routes'
+import { useState, useEffect, useCallback} from 'react'
+import { useNavigation, useRoute, useFocusEffect} from '@react-navigation/native'
 
 import {
     Container,
@@ -25,6 +23,7 @@ import {
     CharCon,
     CharCar,
     EndContainer,
+    CharWeight,
 } from './styles'
 
 import { Header } from '../../../components/Header'
@@ -32,96 +31,55 @@ import { TextAreaDisabled } from '../../../components/TextAreaDisabled'
 import { PickerStyled } from '../../../components/PickerStyled'
 import { AttributeBar } from '../../../components/AttributeBar'
 import { Alert } from 'react-native'
-
-
+import { CharProps } from '../../../storage/character/characterDTO'
+import { GetCharacter } from '../../../storage/character/getCharacter'
 
 export function ShowCharacter(){
-    const [activeWeapon, setActiveWeapon] = useState('')
+    const [firstActiveWeapon, setFirstActiveWeapon] = useState('')
+    const [secondActiveWeapon, setSecondActiveWeapon] = useState('')
     const [activeArmor, setActiveArmor] = useState('')
     const [activeExtraItem, setActiveExtraItem] = useState('')
+    const [currentWeight, setCurrentWeight] = useState(0)
     const [HP, setHP] = useState(0)
     const [AC, setAC] = useState(0)
     const [CA, setCA] = useState(0)
 
     const navigation = useNavigation()
-
+    
     interface RouteParams{
         charInfo : CharProps
     }
+
     const route = useRoute()
-    let { charInfo } = route.params as RouteParams
+    const { charInfo } = route.params as RouteParams
 
-    if(charInfo === undefined || charInfo.name === ''){
-        charInfo = {
-            name : '',
-            imgURL : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Blank_Square.svg/768px-Blank_Square.svg.png',
-            sex : '',
-            age : 0,
-            race : '',
-            level : 0,
-            hp : 0,
-            attributePoints: 0,
-            hpPoints: 0,
-            history : '',
-            attributes : {
-                for : 0, 
-                dex : 0,
-                con : 0,
-                int : 0,
-                sab : 0,
-                car : 0,
-            },
-            weapons : [{
-                name: '',
-                hp: 0,
-                ac: 0,
-                ca: 0,
-                dmg: '',
-                effect: '',
-                description: ''
-            }],
-            armors : [{
-                name: '',
-                hp: 0,
-                ac: 0,
-                ca: 0,
-                effect: '',
-                description: ''
-            }],
-            extraItems : [{
-                name: '',
-                hp: 0,
-                ac: 0,
-                ca: 0,
-                effect: '',
-                description: ''
-            }],
-            magics : [{
-                type: '',
-                description: ''
-            }]
-        }
-
+    if(charInfo === undefined){
         navigation.navigate(`newCharacter`)
-        Alert.alert('Personagem não encontrado', 'Crie um personagem novo ou retorne a Home')
     }
 
-    function getFastResumeStats(hp:number = charInfo.hp, ac:number = 0, ca:number = 0){
-        charInfo.weapons.filter( el => {
-            if (el.name === activeWeapon){
+    console.log(charInfo)
+
+    function getFastResumeStats(hp:number = charInfo!.hp, ac:number = 0, ca:number = 0){
+        charInfo!.weapons.filter( el => {
+            if (el.name === firstActiveWeapon){
+                hp += el.hp 
+                ac += el.ac
+                ca += el.ca 
+            }
+            if (el.name === secondActiveWeapon){
                 hp += el.hp 
                 ac += el.ac
                 ca += el.ca 
             }
         })
-        charInfo.armors.filter( el => {
+        charInfo!.armors.filter( el => {
             if (el.name === activeArmor){
                 hp += el.hp 
                 ac += el.ac
                 ca += el.ca 
             }
         })
-        charInfo.extraItems.filter( el => {
+        charInfo!.extraItems.filter( el => {
             if (el.name === activeExtraItem){
                 hp += el.hp 
                 ac += el.ac
@@ -209,13 +167,13 @@ export function ShowCharacter(){
         }
     }
 
-    function handleUpChar(){
-        navigation.navigate('upCharacter', {charInfo : charInfo})
+    async function handleUpChar(){
+        navigation.navigate('upCharacter', {charInfo : await GetCharacter()})
     }
 
     useEffect(()=>{
         getFastResumeStats()
-    },[activeArmor, activeExtraItem, activeWeapon])
+    },[activeArmor, activeExtraItem, firstActiveWeapon, secondActiveWeapon])
 
     return(
         <Container>
@@ -226,22 +184,22 @@ export function ShowCharacter(){
 
                 {/* Basic information Section - Start */}
 
-                <CharImg source={{uri : (charInfo.imgURL)}}/>
+                <CharImg source={{uri : (charInfo!.imgURL)}}/>
 
                 <Line/>
 
-                <CharName>{charInfo.name}</CharName>
+                <CharName>{charInfo!.name}</CharName>
 
                 <Line/>
 
                 <LineContainer>
-                    <CharSex> Sexo: {charInfo.sex}</CharSex>
-                    <CharAge> Idade: {charInfo.age} anos</CharAge>
+                    <CharSex> Sexo: {charInfo!.sex}</CharSex>
+                    <CharAge> Idade: {charInfo!.age} anos</CharAge>
                 </LineContainer>
 
-                <CharRace> Raça: {charInfo.race}</CharRace>
+                <CharRace> Raça: {charInfo!.race}</CharRace>
 
-                <TextAreaDisabled highLightText='História' text={charInfo.history}/>
+                <TextAreaDisabled highLightText='História' text={charInfo!.history}/>
 
                 {/* Basic information Section - End */}
 
@@ -251,14 +209,32 @@ export function ShowCharacter(){
 
                 <SubTitle>Equipamento Ativo</SubTitle>
                 <PickerStyled 
-                    selectedValue={activeWeapon}
-                    onValueChange={setActiveWeapon}
-                    placeHolder='Arma Ativa'
-                    valueArrays={ charInfo.weapons.map(el=> el.name) }
+                    selectedValue={firstActiveWeapon}
+                    onValueChange={setFirstActiveWeapon}
+                    placeHolder='Arma Principal'
+                    valueArrays={ charInfo!.weapons.map(el=> el.name) }
                 />
                 {
-                    charInfo.weapons.map(el => {
-                        if(el.name === activeWeapon){
+                    charInfo!.weapons.map(el => {
+                        if(el.name === firstActiveWeapon){
+                            if(el.effect !== ''){
+                                return (<TextAreaDisabled key={el.name} highLightText={`${el.name} - Efeito`} text={el.effect}/>)
+                            }
+                        }})
+                }
+
+                { 
+                charInfo!.attributes.dex > 0 &&
+                    <PickerStyled 
+                        selectedValue={secondActiveWeapon}
+                        onValueChange={setSecondActiveWeapon}
+                        placeHolder='Arma Secundária'
+                        valueArrays={ charInfo!.weapons.map(el=> el.name) }
+                    />
+                }
+                {
+                    charInfo!.weapons.map(el => {
+                        if(el.name === secondActiveWeapon){
                             if(el.effect !== ''){
                                 return (<TextAreaDisabled key={el.name} highLightText={`${el.name} - Efeito`} text={el.effect}/>)
                             }
@@ -269,10 +245,10 @@ export function ShowCharacter(){
                     selectedValue={activeArmor}
                     onValueChange={setActiveArmor}
                     placeHolder='Armadura Ativa'
-                    valueArrays={ charInfo.armors.map(el=> el.name) }
+                    valueArrays={ charInfo!.armors.map(el=> el.name) }
                 />
                 {
-                    charInfo.armors.map(el => {
+                    charInfo!.armors.map(el => {
                         if(el.name === activeArmor){
                             if(el.effect !== ''){
                                 return (<TextAreaDisabled key={el.name} highLightText={`${el.name} - Efeito`} text={el.effect}/>)
@@ -284,10 +260,10 @@ export function ShowCharacter(){
                     selectedValue={activeExtraItem}
                     onValueChange={setActiveExtraItem}
                     placeHolder='Item Extra'
-                    valueArrays={ charInfo.extraItems.map(el=> el.name) }
+                    valueArrays={ charInfo!.extraItems.map(el=> el.name) }
                 />
                 {
-                    charInfo.extraItems.map(el => {
+                    charInfo!.extraItems.map(el => {
                         if(el.name === activeExtraItem){
                             if(el.effect !== ''){
                                 return (<TextAreaDisabled key={el.name} highLightText={`${el.name} - Efeito`} text={el.effect}/>)
@@ -308,23 +284,26 @@ export function ShowCharacter(){
                     <CharAC>{`AC: ${AC}`}</CharAC>
                     <CharCA>{`CA: ${CA}`}</CharCA>
                 </LineContainer>
-
-                <CharLevel>{`Nível: ${charInfo.level}`}</CharLevel>
+                
+                <LineContainer style={{ justifyContent: 'space-around' }}>
+                    <CharLevel>{`Nível: ${charInfo!.level}`}</CharLevel>
+                    <CharWeight>{`Peso: ${currentWeight}/${charInfo!.weight}`}</CharWeight>
+                </LineContainer>
 
                 <Line/>
 
                 <SubTitle>BÔNUS</SubTitle>
 
                 <LineContainer>
-                    <CharFor>{`FOR: ${getForceBonus(charInfo.attributes.for)}`}</CharFor>
-                    <CharDex>{`DEX: ${getDexterityBonus(charInfo.attributes.dex)}`}</CharDex>
-                    <CharCon>{`CON: ${getConstitutionBonus(charInfo.attributes.con)}`}</CharCon>
+                    <CharFor>{`FOR: ${getForceBonus(charInfo!.attributes.for)}`}</CharFor>
+                    <CharDex>{`DEX: ${getDexterityBonus(charInfo!.attributes.dex)}`}</CharDex>
+                    <CharCon>{`CON: ${getConstitutionBonus(charInfo!.attributes.con)}`}</CharCon>
                 </LineContainer>
 
                 <LineContainer>
-                    <CharInt>{`INT: ${getIntelligenceBonus(charInfo.attributes.int)}`}</CharInt>
-                    <CharSab>{`SAB: ${getWisdomBonus(charInfo.attributes.sab)}`}</CharSab>
-                    <CharCar>{`CAR: ${getCharismaBonus(charInfo.attributes.car)}`}</CharCar>
+                    <CharInt>{`INT: ${getIntelligenceBonus(charInfo!.attributes.int)}`}</CharInt>
+                    <CharSab>{`SAB: ${getWisdomBonus(charInfo!.attributes.sab)}`}</CharSab>
+                    <CharCar>{`CAR: ${getCharismaBonus(charInfo!.attributes.car)}`}</CharCar>
                 </LineContainer>
 
                 {/* Fast Resume Section - End */}
@@ -336,7 +315,7 @@ export function ShowCharacter(){
                 <SubTitle>Magias</SubTitle>
 
                 {
-                    charInfo.magics.map((el, i) => {
+                    charInfo!.magics.map((el, i) => {
                         if(el.type !== ''){
                             return(<TextAreaDisabled key={`${el.type}-${i}`} highLightText={el.type} text={el.description} />)
                         }
@@ -351,12 +330,12 @@ export function ShowCharacter(){
 
                 <SubTitle>Atributos</SubTitle>
 
-                <AttributeBar attribute='For' level={charInfo.attributes.for}/>
-                <AttributeBar attribute='Dex' level={charInfo.attributes.dex}/>
-                <AttributeBar attribute='Con' level={charInfo.attributes.con}/>
-                <AttributeBar attribute='Int' level={charInfo.attributes.int}/>
-                <AttributeBar attribute='Sab' level={charInfo.attributes.sab}/>
-                <AttributeBar attribute='Car' level={charInfo.attributes.car}/>
+                <AttributeBar attribute='For' level={charInfo!.attributes.for}/>
+                <AttributeBar attribute='Dex' level={charInfo!.attributes.dex}/>
+                <AttributeBar attribute='Con' level={charInfo!.attributes.con}/>
+                <AttributeBar attribute='Int' level={charInfo!.attributes.int}/>
+                <AttributeBar attribute='Sab' level={charInfo!.attributes.sab}/>
+                <AttributeBar attribute='Car' level={charInfo!.attributes.car}/>
 
                 {/* Attributes Section - End */}
 

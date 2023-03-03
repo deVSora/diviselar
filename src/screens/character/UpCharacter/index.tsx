@@ -1,5 +1,4 @@
 import { useRoute, useNavigation } from '@react-navigation/native'
-import { CharProps } from '../../../@types/routes'
 import { useEffect, useState } from 'react'
 
 import theme from './../../../theme'
@@ -27,6 +26,7 @@ import {
     DefaultText,
     EndContainer,
     MagicContainer,
+    CharWeight,
 } from './styles'
 
 import { Header } from '../../../components/Header'
@@ -35,6 +35,10 @@ import { AttributeBar } from '../../../components/AttributeBar'
 import { Alert } from 'react-native'
 import { Input } from '../../../components/Input'
 import { PickerStyled } from '../../../components/PickerStyled'
+import { CharProps } from '../../../storage/character/characterDTO'
+import { UpdateCharacter } from '../../../storage/character/updateCharacter'
+import { GetCharacter } from '../../../storage/character/getCharacter'
+import { RemoveCharacter } from '../../../storage/character/removeCharacter'
 
 
 
@@ -62,6 +66,7 @@ export function UpCharacter(){
     const [intelligence, setIntelligence] = useState(char.attributes.int)
     const [wisdom, setWisdom] = useState(char.attributes.sab)
     const [charisma, setCharisma] = useState(char.attributes.car)
+    const [weight, setWeight] = useState(char.weight)
     const countMagics = char.magics.length
 
     const [magicType1, setMagicType1] = useState(countMagics >= 1 ? char.magics[0].type : '')
@@ -176,57 +181,7 @@ export function UpCharacter(){
         }
     }
 
-    function handleDeleteChar(){
-        const emptyChar : CharProps = {
-            name : '',
-            imgURL : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Blank_Square.svg/768px-Blank_Square.svg.png',
-            sex : '',
-            age : 0,
-            race : '',
-            level : 0,
-            hp : 0,
-            attributePoints: 0,
-            hpPoints: 0,
-            history : '',
-            attributes : {
-                for : 0, 
-                dex : 0,
-                con : 0,
-                int : 0,
-                sab : 0,
-                car : 0,
-            },
-            weapons : [{
-                name: '',
-                hp: 0,
-                ac: 0,
-                ca: 0,
-                dmg: '',
-                effect: '',
-                description: ''
-            }],
-            armors : [{
-                name: '',
-                hp: 0,
-                ac: 0,
-                ca: 0,
-                effect: '',
-                description: ''
-            }],
-            extraItems : [{
-                name: '',
-                hp: 0,
-                ac: 0,
-                ca: 0,
-                effect: '',
-                description: ''
-            }],
-            magics : [{
-                type: '',
-                description: ''
-            }]
-        }
-
+    async function handleDeleteChar(){
         Alert.alert(`Deseja deletar ${char.name}?`, `A personagem ${char.name} será deletada permanentemente!`, [
             {
               text: 'Cancelar',
@@ -234,8 +189,9 @@ export function UpCharacter(){
               style: 'cancel',
             },
             {text: 'Deletar', onPress: () => {
-                navigation.navigate('showCharacter', {charInfo : emptyChar})
-                navigation.navigate('home') 
+                RemoveCharacter()
+                navigation.navigate('home')
+                Alert.alert('Deletado', 'Personagem deletado')
                 }},
           ]);
     }
@@ -334,7 +290,63 @@ export function UpCharacter(){
         }
     }
 
-    function handleUpdateChar(){
+    function handleWeight(){
+        
+        if(force === 1) {
+            setWeight(30)
+        }
+        else if(force === 2) {
+            setWeight(50)
+        }
+        else if(force === 3) {
+            setWeight(70)
+        }
+        else if(force === 4) {
+            setWeight(90)
+        }
+        else if(force === 5) {
+            setWeight(110)
+        }
+        else if(force === 6) {
+            setWeight(140)
+        }
+
+        if(race.indexOf('Humano') !== -1){
+            setWeight( prevState => prevState += 10)
+        }
+        else if(race.indexOf('Elfo') !== -1){
+            setWeight( prevState => prevState += 5)
+        }
+        else if(race.indexOf('Demonoid') !== -1){
+            setWeight( prevState => prevState += 20)
+        }
+        else if(race.indexOf('Furry') !== -1){
+            setWeight( prevState => prevState += 15)
+        }
+
+
+        if(dexterity === 1) {
+            setWeight( prevState => prevState += 5)
+        }
+        if(dexterity === 2) {
+            setWeight( prevState => prevState += 10)
+        }
+        if(dexterity === 3) {
+            setWeight( prevState => prevState += 20)
+        }
+        if(dexterity === 4) {
+            setWeight( prevState => prevState += 30)
+        }
+        if(dexterity === 5) {
+            setWeight( prevState => prevState += 40)
+        }
+        if(dexterity === 6) {
+            setWeight( prevState => prevState += 50)
+        }
+
+    }
+
+    async function handleUpdateChar(){
         let validation = true
         let magicsArray = [magicType1, magicType2, magicType3, magicType4, magicType5, magicType6]
         
@@ -371,6 +383,7 @@ export function UpCharacter(){
                 imgURL : char.imgURL,
                 sex : char.sex,
                 age : char.age,
+                weight: weight,
                 race : race,
                 level : level,
                 hp : hpUp,
@@ -437,12 +450,18 @@ export function UpCharacter(){
                     }
                 ]
             }
-            console.log(updatedChar)
-    
-            navigation.navigate(`showCharacter`, {charInfo: updatedChar})
+            
+            
+            await UpdateCharacter(updatedChar)
+
+            navigation.navigate(`showCharacter`, {charInfo: await GetCharacter()})
             Alert.alert('Personagem upado', 'Parabéns pelo esforço, continue evoluindo!')
         }
     }
+
+    useEffect(()=>{
+        handleWeight()
+    },[dexterity, force])
 
     return(
         <Container>
@@ -466,7 +485,10 @@ export function UpCharacter(){
 
                 <Line/>
 
-                <CharLevel>{`Nível: ${level}`}</CharLevel>
+                <LineContainer>
+                    <CharLevel>{`Nível: ${level}`}</CharLevel>
+                    <CharWeight>{`Peso Máx: ${weight}`}</CharWeight>
+                </LineContainer>
 
                 <HPUpContainer>
                     <RollsContainer>

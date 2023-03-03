@@ -20,7 +20,7 @@ export default {
         hp: 10,
         ac: 1,
         ca: 0,
-        dmg: 12, //Do a function for roll dices and calculate it
+        dmg: '2d10', //Do a function for roll dices and calculate it
         effect: '',
         description: 'Um dinourso muito amado'
     },
@@ -29,7 +29,7 @@ export default {
         hp: 20,
         ac: 0,
         ca: 1,
-        dmg: 15, //Do a function for roll dices and calculate it
+        dmg: '3d6', //Do a function for roll dices and calculate it
         effect: 'Ataques forçam o inimigo atingido a passar num teste de CON, se não passar o inimigo toma desvantagem',
         description: 'A ursal'
     }],
@@ -55,7 +55,7 @@ export default {
         ac: 2,
         ca: 1,
         effect: '',
-        description: 'Isso realmente existe?'
+        description: ' '
     }],
     magics: [{
         type : 'O',

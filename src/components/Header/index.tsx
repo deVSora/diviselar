@@ -27,7 +27,7 @@ export function Header({backArrow = false, title, edit = false, editScreen}: Pro
 
     return(
         <Container>
-            {backArrow && <BackButton onPress={handleBack}><BackIcon/></BackButton>}
+            {backArrow ? <BackButton onPress={handleBack}><BackIcon/></BackButton> : <InvisibleContainer/>}
             <Title>{title}</Title>
             {edit ? <EditButton onPress={editScreen}><EditIcon/></EditButton> : <InvisibleContainer/>}
         </Container>

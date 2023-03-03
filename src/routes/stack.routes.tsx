@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { AppRoutes } from "./app.routes"
 
-import {NewCharacter} from '../screens/character/NewCharacter'
 import { UpCharacter } from "../screens/character/UpCharacter"
+import { ShowCharacter } from "../screens/character/ShowCharacter"
 
 export function StackRoutes(){
     const stack = createNativeStackNavigator()
@@ -10,7 +10,7 @@ export function StackRoutes(){
     return(
     <stack.Navigator screenOptions={{headerShown: false}}>
         <stack.Screen name="start" component={AppRoutes}/>
-        <stack.Screen name="newCharacter" component={NewCharacter} />
+        <stack.Screen name="showCharacter" component={ShowCharacter} />
         <stack.Screen name="upCharacter" component={UpCharacter} />
     </stack.Navigator>
     )

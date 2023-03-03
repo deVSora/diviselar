@@ -118,6 +118,17 @@ export const CharLevel = styled.Text`
     `}
 `
 
+export const CharWeight = styled.Text`
+    ${({theme})=> css`
+        font-size: ${theme.fontSize.lg};
+        font-family: ${theme.fontFamily.Semibold};
+        color: ${theme.colors.fourth};
+        text-align: center;
+        margin-top: 10px;
+    `}
+`
+
+
 export const CharFor = styled.Text`
     ${({theme})=> css`
         font-size: ${theme.fontSize.lg};

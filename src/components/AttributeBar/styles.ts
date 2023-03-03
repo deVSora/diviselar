@@ -15,6 +15,7 @@ export const Container = styled.View`
 
 export const LevelContainer = styled.View`
     flex-direction: row;
+    flex-shrink: 1;
 `
 
 export const LevelText = styled.Text`
@@ -23,7 +24,7 @@ export const LevelText = styled.Text`
         font-family: ${theme.fontFamily.Semibold};
         color: ${theme.colors.fourth};
         text-align: left;
-        margin-right: 40px;
+        width: 50px;
         text-transform: uppercase;
     `}
 `
@@ -37,6 +38,7 @@ export const FirstLevel = styled.View<Props>`
         border: 1px solid ${type === 6 ? theme.colors.fourth : theme.colors.third};
         background-color: ${type !== 6 ? type > 0 ? theme.colors.secondary : theme.colors.fourth : theme.colors.red};
     `}
+    flex-grow: 1
 `
 
 export const FirstLevelUp = styled.TouchableOpacity`
@@ -50,6 +52,7 @@ export const FirstLevelUp = styled.TouchableOpacity`
         border: 1px solid ${theme.colors.third};
         background-color: ${theme.colors.third};
     `}
+    flex-grow: 1
 `
 
 export const SecondLevel = styled.View<Props>`
@@ -59,6 +62,7 @@ export const SecondLevel = styled.View<Props>`
         border: 1px solid ${type === 6 ? theme.colors.fourth : theme.colors.third};
         background-color: ${type !== 6 ? type > 1 ? theme.colors.secondary : theme.colors.fourth : theme.colors.red};
     `}
+    flex-grow: 1
 `
 
 export const SecondLevelUp = styled.TouchableOpacity`
@@ -70,6 +74,7 @@ export const SecondLevelUp = styled.TouchableOpacity`
         border: 1px solid ${theme.colors.third};
         background-color: ${theme.colors.third};
     `}
+    flex-grow: 1
 `
 
 export const ThirdLevel = styled.View<Props>`
@@ -79,6 +84,7 @@ export const ThirdLevel = styled.View<Props>`
         border: 1px solid ${type === 6 ? theme.colors.fourth : theme.colors.third};
         background-color: ${type !== 6 ? type > 2 ? theme.colors.secondary : theme.colors.fourth : theme.colors.red};
     `}
+    flex-grow: 1
 `
 
 export const ThirdLevelUp = styled.TouchableOpacity`
@@ -90,6 +96,7 @@ export const ThirdLevelUp = styled.TouchableOpacity`
         border: 1px solid ${theme.colors.third};
         background-color: ${theme.colors.third};
     `}
+    flex-grow: 1
 `
 
 export const FourthLevel = styled.View<Props>`
@@ -99,6 +106,7 @@ export const FourthLevel = styled.View<Props>`
         border: 1px solid ${type === 6 ? theme.colors.fourth : theme.colors.third};
         background-color: ${type !== 6 ? type > 3 ? theme.colors.secondary : theme.colors.fourth : theme.colors.red};
     `}
+    flex-grow: 1
 `
 
 export const FourthLevelUp = styled.TouchableOpacity`
@@ -110,6 +118,7 @@ export const FourthLevelUp = styled.TouchableOpacity`
         border: 1px solid ${theme.colors.third};
         background-color: ${theme.colors.third};
     `}
+    flex-grow: 1
 `
 
 export const FifthLevel = styled.View<Props>`
@@ -119,6 +128,7 @@ export const FifthLevel = styled.View<Props>`
         border: 1px solid ${type === 6 ? theme.colors.fourth : theme.colors.third};
         background-color: ${type !== 6 ? type > 4 ? theme.colors.secondary : theme.colors.fourth : theme.colors.red};
     `}
+    flex-grow: 1
 `
 
 export const FifthLevelUp = styled.TouchableOpacity`
@@ -130,6 +140,7 @@ export const FifthLevelUp = styled.TouchableOpacity`
         border: 1px solid ${theme.colors.third};
         background-color: ${theme.colors.third};
     `}
+    flex-grow: 1
 `
 
 export const SixthLevel = styled.View<Props>`
@@ -141,6 +152,7 @@ export const SixthLevel = styled.View<Props>`
         border: 1px solid ${type === 6 ? theme.colors.fourth : theme.colors.third};
         background-color: ${type > 5 ? theme.colors.red : theme.colors.fourth};
     `}
+    flex-grow: 1
 `
 
 export const SixthLevelUp = styled.TouchableOpacity`
@@ -154,4 +166,5 @@ export const SixthLevelUp = styled.TouchableOpacity`
         border: 1px solid ${theme.colors.fourth};
         background-color: ${theme.colors.red};
     `}
+    flex-grow: 1
 `

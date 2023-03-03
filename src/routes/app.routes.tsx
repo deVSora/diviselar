@@ -1,17 +1,22 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {Home} from './../screens/Home'
-import {ShowInventory} from './../screens/ShowInventory'
+import {ShowInventory} from '../screens/inventory/ShowInventory'
 
 import { House, User, Sword } from "phosphor-react-native";
 import theme from './../theme'
-import { ShowCharacter } from "../screens/character/ShowCharacter";
-import { CharProps } from '../@types/routes';
+import { GetCharacter } from '../storage/character/getCharacter';
+import { NewCharacter } from '../screens/character/NewCharacter';
 
 
 export function AppRoutes(){
     const Tab = createBottomTabNavigator();
-    const emptyChar = {}
+
+    async function fetchCharacter(){
+        const data = await GetCharacter()
+
+        return data
+    }
 
     return(
         <Tab.Navigator screenOptions={{
@@ -32,9 +37,8 @@ export function AppRoutes(){
                 />
 
             <Tab.Screen 
-                name="showCharacter" 
-                component={ShowCharacter}
-                initialParams={emptyChar}
+                name="newCharacter" 
+                component={NewCharacter}
                 options={{
                     tabBarLabel: 'Ficha',
                     tabBarIcon : ({color}) => (<User color={color} weight={'fill'}/>),
